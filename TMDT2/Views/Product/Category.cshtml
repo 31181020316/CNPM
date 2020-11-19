@@ -1,0 +1,33 @@
+﻿@model IEnumerable<Product>
+@{
+    ViewBag.Title = "Category";
+}
+
+<h2>Category</h2>
+
+<div>
+    @foreach (var p in Model)
+    {
+    <div class="col-md-3">
+        <div class="nn-product-box">
+            <a href="/Product/Detail/">
+                <img class="img-responsive" src="/Content/img/products/@p.Image" />
+            </a>
+            <div class="nn-product-box-descriptions">
+                <h3 class="nn-product-box-name">
+                    <a href="http://newsmartwave.net/magento/legenda/index.php/fashion-jacket-386.html" title="@p.Name">@p.Name</a>
+                </h3>
+                <div class="nn-product-box-price ">
+                    <span class="">$@p.UnitPrice</span>
+                </div>
+                <div class="nn-product-box-actions">
+                    <button type="button" class="btn btn-default blue">
+                        <span>Add to Cart</span>
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    }
+</div>

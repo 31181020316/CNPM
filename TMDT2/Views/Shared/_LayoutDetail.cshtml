@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MultiShop</title>
+    <link href="~/Content/img/logo.png" rel="shortcut icon" type="image/x-icon">
+    <!--jquery first, bootstrap later-->
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+
+<body>
+    <div id="fb-root"></div>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v8.0&appId=2817895741822569&autoLogAppEvents=1" nonce="sQUrwCRk"></script>
+    <div class="container">
+        <header class="nn-header">
+            <div class=" col-sm-3 col-md-3 nn-text-align-center">
+               <a href="/">
+                    <img src="/Content/img/logo.png" class="img-responsive" />
+               </a>
+                </div><!--end logo-->
+            <div class="col-md-6 col-sm-6 ">
+                @Html.Partial("_Search")
+            </div><!--end search box-->
+            <div class="nn-cart-box col-sm-3 col-md-3 ">
+                <div class="nn-top-cart-wrapper ">
+                    <div class="nn-top-cart-contain">
+                        <div class="nn-block-cart">
+                            <div class="nn-top-cart-title">
+                                <span class="glyphicon glyphicon-shopping-cart"></span>
+                                <a href="http://www.plazathemes.com/demo/ma_enzo/index.php/checkout/cart/">
+                                    0 item<i class="caret"></i>
+                                    <br /><span class="price"><strong>$0.00</strong></span>
+                                </a>
+                            </div>
+                            <div class="nn-top-cart-content" style="overflow: hidden; display: none;">
+                                <p class="empty">You have no items in your shopping cart.</p>
+                                <div class="top-subtotal">Subtotal: <span class="price">$0.00</span></div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div><!--end cart box-->
+        </header>
+
+        @Html.Partial("_Menu")
+        <div class="container row">
+
+            <div class="col-md-9 col-sm-9 col-lg-9 col-xs-12">
+
+                @RenderBody()
+
+            </div>
+        </div>
+        @Html.Partial("_Footer")
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+    <script>//tạo scripts tìm kiếm
+        $(function () {
+            $("#search").autocomplete({
+                source: "/Home/Search",
+                minLength: 2
+            });
+        })
+    </script>
+</body>
+</html>
