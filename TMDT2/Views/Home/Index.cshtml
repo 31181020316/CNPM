@@ -1,7 +1,35 @@
 ﻿@model IEnumerable<Category>
-@{
-    ViewBag.Title = "Home Page";
-}
+@{ ViewBag.Title = "Trang chủ"; }
+
+<div class="nn-home-banner">
+    <img src="/Content/img/banner/home-banner03.jpg" class="img-responsive" />
+</div><!--end home banner-->
+<style>
+    .nn-product-box-name > a {
+        height: 40px;
+        font-size: 18px;
+        margin-bottom: 10px;
+        color: #444;
+        text-transform: uppercase;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: pre-wrap;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        display: -webkit-box;
+    }
+    .img-product {
+        height: 176.25px;
+        width: 176.25px;
+    }
+    .nn-product-box-price {
+        font-size: 16px;
+        margin-bottom: 10px;
+        line-height: 1;
+        color: #ed6f6f;
+    }
+</style>
+
 @foreach (var c in Model)
 {
     var items = c.Products
@@ -11,7 +39,7 @@
     <div class="nn-block-margin-top30px">
         <div class="nn-cat-title">
 
-            <a href="/Product/Category?CategoryID=@c.Id"><h2>@c.Name</h2></a>
+            <a href="/san-pham/@c.Name.ToAscii().ToLower()-@c.Id"><h2>@c.Name</h2></a>
 
         </div>
         <div>
@@ -19,19 +47,20 @@
             {
                 <div class="col-md-3 col-sm-6 col-sx-12">
                     <div class="nn-product-box">
-                        <a href="/Product/Detail/@p.Id">
-                            <img id="i@(p.Id)" class="img-responsive" alt="@p.Name" src="/Content/img/products/@p.Image" />
+
+                        <a href="/chi-tiet-san-pham/@p.Name.ToAscii().ToLower()_@p.Id">
+                            <img id="i@(p.Id)" class="img-responsive img-product" alt="@p.Name" src="/Content/img/products/@p.Image" />
                         </a>
                         <div class="nn-product-box-descriptions">
                             <h3 class="nn-product-box-name">
-                                <a href="/Product/Detail/@p.Id" title="@p.Name">@p.Name</a>
+                                <a href="/chi-tiet-san-pham/@p.Name.ToAscii().ToLower()_@p.Id" title="@p.Name">@p.Name</a>
                             </h3>
                             <div class="nn-product-box-price ">
-                                <span class="">$@p.UnitPrice</span>
+                                <span class="">@Html.FormatValue(p.UnitPrice, "{0:n} VNĐ")</span>
                             </div>
                             <div class="nn-product-box-actions">
                                 <button type="button" title="Add to Cart" class="btn btn-default add-to-cart" data-id="@p.Id">
-                                    <span>Add to Cart</span>
+                                    <span>Thêm vào giỏ hàng</span>
                                 </button>
 
                             </div>
@@ -39,50 +68,13 @@
                     </div>
                 </div>
             }
-            <div><a class="pull-right alert-link" href="/Product/Category?CategoryID=@c.Id"><h6>View More...</h6></a></div>
+            <div><a class="pull-right alert-link" href="/san-pham/@c.NameVN.ToAscii().ToLower()-@c.Id"><h6>Xem thêm...</h6></a></div>
         </div>
+
     </div>
 
     <div class="clearfix"></div>
 }
-@*@foreach (var c in Model)
-    {
-        var item = c.Products.Take(4);
-        <div class="nn-block-margin-top30px">
-            <div class="nn-cat-title">
-                <p>
-                    <i class="glyphicon glyphicon-tag"></i>
-                    <h2>@c.Name</h2>
-                </p>
-            </div>
-
-            @foreach (var p in item)
-            {
-                <div>
-                    <div class="col-md-3">
-                        <div class="nn-product-box">
-                            <a href="/Product/Detail/@p.Id">
-                                <img class="img-responsive" src="/Content/img/products/@p.Image" />
-                            </a>
-                            <div class="nn-product-box-descriptions">
-                                <h3 class="nn-product-box-name">
-                                    <a href="http://newsmartwave.net/magento/legenda/index.php/fashion-jacket-386.html" title="@p.Name">@p.Name</a>
-                                </h3>
-                                <div class="nn-product-box-price ">
-                                    <span class="">$@p.UnitPrice</span>
-                                </div>
-                                <div class="nn-product-box-actions">
-                                    <button type="button" class="btn btn-default blue">
-                                        <span>Add to Cart</span>
-                                    </button>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            }
-        </div>*@
 
 @section scripts{
     <script>
@@ -93,7 +85,6 @@
                     url: "/Cart/Add",
                     data: { id: pid },
                     success: function (response) {
-                        alert("Đã thêm vào giỏ hàng thành công");
                         $("#nn-cart-count").html(response.Count);
                         $("#nn-cart-total").html(response.Total);
                     }

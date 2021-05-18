@@ -3,31 +3,104 @@
     ViewBag.Title = "Category";
 }
 
-<h2>Category</h2>
-
-<div>
-    @foreach (var p in Model)
-    {
-    <div class="col-md-3">
-        <div class="nn-product-box">
-            <a href="/Product/Detail/">
-                <img class="img-responsive" src="/Content/img/products/@p.Image" />
-            </a>
-            <div class="nn-product-box-descriptions">
-                <h3 class="nn-product-box-name">
-                    <a href="http://newsmartwave.net/magento/legenda/index.php/fashion-jacket-386.html" title="@p.Name">@p.Name</a>
-                </h3>
-                <div class="nn-product-box-price ">
-                    <span class="">$@p.UnitPrice</span>
-                </div>
-                <div class="nn-product-box-actions">
-                    <button type="button" class="btn btn-default blue">
-                        <span>Add to Cart</span>
-                    </button>
-
+<h2>@ViewBag.Title </h2>
+<div class="nn-block-margin-top30px">
+    <div>
+        @foreach (var p in Model)
+        {
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="nn-product-box">
+                    @*<a href="/Product/Detail/@p.Id">*@
+                    <a href="/chi-tiet-san-pham/@p.Name.ToAscii().ToLower()_@p.Id">
+                        <img class="img-responsive img-product" src="/Content/img/products/@p.Image" />
+                    </a>
+                    <div class="nn-product-box-descriptions">
+                        <h3 class="nn-product-box-name">
+                            <a href="/chi-tiet-san-pham/@p.Name.ToAscii().ToLower()_@p.Id" title="@p.Name">@p.Name</a>
+                        </h3>
+                        <div class="nn-product-box-price ">
+                            <span class=""> @Html.FormatValue(p.UnitPrice, "{0:n} VNĐ")</span>
+                        </div>
+                        <div class="nn-product-box-actions">
+                            <button type="button" title="Add to Cart" class="btn btn-default add-to-cart" data-id="@p.Id">
+                                <span>Thêm vào giỏ hàng</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+        }
+
+
+
     </div>
-    }
 </div>
+<style>
+    .nn-view-detail {
+        position: absolute;
+        bottom: -40px;
+        opacity: 0;
+        background-color: black;
+    }
+    .img-product {
+        width: 176.25px;
+        height: 176.25px;
+    }
+
+    .nn-product-box-name > a {
+        height: 40px;
+        font-size: 18px;
+        margin-bottom: 10px;
+        color: #444;
+        text-transform: uppercase;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: pre-wrap;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        display: -webkit-box;
+    }
+    .nn-product-box-price {
+        font-size: 16px;
+        margin-bottom: 10px;
+        line-height: 1;
+        color: #ed6f6f;
+    }
+</style>
+@section scripts{
+    <script>
+        $(function () {
+            $(".add-to-cart").click(function () {
+                pid = $(this).attr("data-id");
+                $.ajax({
+                    url: "/Cart/Add",
+                    data: { id: pid },
+                    success: function (response) {
+                        $("#nn-cart-count").html(response.Count);
+                        $("#nn-cart-total").html(response.Total);
+                    }
+                });
+
+                // hieu ung bay vao gio
+                cssfly = ".fly-effect {background:url(?);background-size:100% 100%;}";
+                src = $("#i" + pid).attr("src");
+                newcssfly = cssfly.replace("?", src);
+                $("#cart-fly").html(newcssfly);
+
+                options = { to: "#nn-cart-image", className: "fly-effect" };
+                $("#i" + pid).effect("transfer", options, 500, function () { });
+            });
+        });
+    </script>
+    <script>
+        $("div.nn-product-box").hover(function () {
+
+            $(this).find(".nn-view-detail").stop().animate({ opacity: 0.6, bottom: '0px' });
+        }, function () {
+            $(this).find(".nn-view-detail").stop().animate({ opacity: 0, bottom: '-40px' });
+        });
+
+
+
+    </script>
+}

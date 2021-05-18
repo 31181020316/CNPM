@@ -3,31 +3,61 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using TMDT2.Models;
+using TMDT2.Helpers;
+
 
 namespace TMDT2.Controllers
 {
+
     public class ProductController : Controller
     {
         MultiShopDbContext db = new MultiShopDbContext();
-        // GET: Product
-        public ActionResult Index()
+        //
+        // GET: /Product/
+        public ActionResult Category(int CategoryID = 0)
         {
-            return View();
-        }
-
-        public ActionResult Category(int CategoryID=0)
-        {
-            if (CategoryID!=0)
+            string url = "https://vnexpress.net/rss/giai-tri.rss";
+            ViewBag.listItems = RSSHelper.read(url);
+            if (CategoryID != 0)
             {
-                var model = db.Products.Where(p => p.CategoryId == CategoryID); //Lấy sản phẩm có cùng với mã Category
+                ViewBag.TieuDe = db.Categories.SingleOrDefault(p => p.Id == CategoryID).Name;
+                var model = db.Products.Where(p => p.CategoryId == CategoryID);
                 return View(model);
             }
             return View();
         }
 
-        public ActionResult Detail(int id)
+        public ActionResult Search(String SupplierId = "", int CategoryId = 0, String Keywords = "")
         {
+            string url = "https://vnexpress.net/rss/giai-tri.rss";
+            ViewBag.listItems = RSSHelper.read(url);
+
+            if (SupplierId != "")
+            {
+                var model = db.Products
+                    .Where(p => p.SupplierId == SupplierId);
+                return View(model);
+            }
+            else if (CategoryId != 0)
+            {
+                var model = db.Products
+                    .Where(p => p.CategoryId == CategoryId);
+                return View(model);
+            }
+            else if (Keywords != "")
+            {
+                var model = db.Products
+                    .Where(p => p.Name.Contains(Keywords));
+                return View(model);
+            }
+            return View(db.Products);
+        }
+
+        public ActionResult Detail(int id, string SupplierID)
+        {
+            string url = "https://vnexpress.net/rss/giai-tri.rss";
+            ViewBag.listItems = RSSHelper.read(url);
+
             var model = db.Products.Find(id);
 
             // Tăng số lần xem
@@ -54,21 +84,10 @@ namespace TMDT2.Controllers
             // Truy vấn háng đãn xem
             ViewBag.Views = db.Products
                 .Where(p => keys.Contains(p.Id));
-            //top 10 products
-            ViewBag.Top = db.Products.Where(p => p.Id > 0).OrderByDescending(p => p.Views).Take(10).ToList();
+            //Truy vấn sản phẩm bán chạy
+            ViewBag.Top = db.Products
+                .Where(p => p.Id > 0).OrderByDescending(p => p.Views).Take(10).ToList();
             return View(model);
-        }
-
-        //Gọi hàm search dùng để tìm kiếm các sản phẩm chứa trong textbox trên thanh tìm kiếm
-        public ActionResult Search(String Keywords = "")
-        {
-            if (Keywords != "")
-            {
-                var model = db.Products
-                    .Where(p => p.Name.Contains(Keywords));
-                return View(model);
-            }
-            return View(db.Products);
         }
     }
 }

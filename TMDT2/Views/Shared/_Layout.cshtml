@@ -2,21 +2,30 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>TMDTShop</title>
-    <link href="~/Content/img/logo.png" rel="shortcut icon" type="image/x-icon">
-    <!--jquery first, bootstrap later-->
+    <meta name="description" content="MultiShop" />
+    <meta name="keywords" content="dienthoai, maytinh, thoitrang" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - MultiShop</title>
+    @RenderSection("metasocials", required: false)
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
-</head>
+    <link rel="icon" href="http://www.dammio.com/wp-content/uploads/2017/08/cropped-dammio_icon-32x32.png" sizes="32x32" />
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-153074347-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
 
-<body>
+        gtag('config', 'UA-153074347-1');
+    </script>
+
+</head>
+<body onload="shareFunction()">
     <div class="container">
         <header class="nn-header">
             <div class=" col-sm-3 col-md-3 nn-text-align-center">
-                <a href="/">
-                    <img src="/Content/img/logo.png" class="img-responsive" />
-                </a>
+                <a href="/"><img src="/Content/img/logo.png" class="img-responsive" /></a>
             </div><!--end logo-->
             <div class="col-md-6 col-sm-6 ">
                 @Html.Partial("_Search")
@@ -24,40 +33,59 @@
             <div class="nn-cart-box col-sm-3 col-md-3 ">
                 <div class="nn-top-cart-wrapper ">
                     <div class="nn-top-cart-contain">
-                        @Html.Partial("_CartInfo") <!--Tăng sản phẩm trong giỏ hàng-->
+                        @Html.Partial("_CartInfo")
                     </div>
                 </div>
             </div><!--end cart box-->
         </header>
 
-        @Html.Partial("_Menu")
+        <div class="navbar navbar-default">
+            <div class="navbar-header">
+                <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".js-navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/"><span class="glyphicon glyphicon-home "></span></a>
+            </div>
+
+
+            <div class="navbar-collapse collapse js-navbar-collapse">
+                @Html.Partial("_Menu");
+            </div>
+        </div><!--end navigation-->
         <div class="container row">
             <div class="col-md-3 col-sm-3 col-lg-3 col-xs-12">
                 @Html.Action("Category", "Home")
-                @Html.Action("SaleOff", "Home")
+                @Html.Action("Saleoff", "Home")
                 @Html.Action("Special", "Home")
-                @Html.Partial("_AdBanner")
+                @Html.Partial("_Adbanner", "Home")
+
             </div><!--end left-sidebar-->
             <div class="col-md-9 col-sm-9 col-lg-9 col-xs-12">
-                <div class="nn-home-banner">
-                    <img src="https://cf.shopee.vn/file/170da685eb4647afe3c12bb02b2c7756" class="img-responsive" />
-                </div><!--end home banner-->
                 @RenderBody()
-
             </div>
         </div>
-        @Html.Partial("_Footer")
+        <div class="ma-footer-static">
+            @Html.Partial("_Footer");
+        </div>
     </div>
+
+
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
+    <link href="~/Content/css/jquery-ui.css" rel="stylesheet" />
+    <script src="~/Content/js/jquery-ui.js"></script>
     @RenderSection("scripts", required: false)
     <script>
         $(function () {
             $("#search").autocomplete({
-                source: "/Home/Search", //controler/action
+                source: "/Home/Search",
                 minLength: 2
             });
         })
     </script>
 </body>
 </html>
+<noembed />
